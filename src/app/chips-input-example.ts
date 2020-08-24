@@ -1,6 +1,12 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component} from '@angular/core';
-import {MatChipInputEvent} from '@angular/material/chips';
+import {Component, ViewChild} from '@angular/core';
+import {MatChipInputEvent, MatChipList} from '@angular/material/chips';
+import { FormControl, Validators } from '@angular/forms';
+
+const patternValidator = (pattern) => (ctrl: AbstractControl) => {
+  const invalid = ctrl.value.filter(v => !pattern.exec(v));
+  return invalid.length === 0 ? null : {pattern: invalid}
+}
 
 /**
  * @title Chips with input
@@ -11,15 +17,26 @@ import {MatChipInputEvent} from '@angular/material/chips';
   styleUrls: ['chips-input-example.css'],
 })
 export class ChipsInputExample {
+  @ViewChild(MatChipList)
+  chipList: MatChipList;
   visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  ctrl = new FormControl([
+    'inod@equinor.com',
+    'rhenri@equinor.com',
+  ], patternValidator(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/))
   fruits: string[] = [
     'inod@equinor.com',
     'rhenri@equinor.com',
   ];
+
+  ngOnInit() {
+    this.ctrl.statusChanges.subscribe(console.error);
+    this.ctrl.valueChanges.subscribe(console.log);
+  }
 
   add(event: MatChipInputEvent): void {
     const re = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
@@ -28,20 +45,27 @@ export class ChipsInputExample {
     const groups = value.match(re);
 
     // Validate?
+    // Split by ; & , & validate each line
     if (!groups) {
       return;
     }
 
-    // /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/gim.exec(value);
-    
-    groups
-      .filter(m => !this.fruits.includes(m))
+    // there are some valid emails at least..
+    const split = value.split(/[,;]/)
+    const emails = split
+      .map(s => {
+        return s.match(re) ? s.match(re) : s;
+      }).flat();
+      console.log(emails);
+
+    emails
+      .filter(m => !(this.ctrl.value || []).includes(m))
       .forEach(m => {
-      this.fruits.push(m.trim());
+        console.log(m);
+        this.chipList.updateErrorState();
+        this.ctrl.setValue([...this.ctrl.value, m], {emitEvent: true})
     })
-
-    // Add our fruit
-
+    this.ctrl.updateValueAndValidity();
 
     // Reset the input value
     if (input) {

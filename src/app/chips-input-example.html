@@ -1,8 +1,11 @@
 <mat-form-field class="example-chip-list">
   <mat-label>Report recipients</mat-label>
-  <mat-chip-list #chipList aria-label="Fruit selection">
-    <mat-chip *ngFor="let fruit of fruits" [selectable]="selectable"
-             [removable]="removable" (removed)="remove(fruit)">
+  <mat-chip-list [formControl]="ctrl" #chipList aria-label="Fruit selection">
+    <mat-chip *ngFor="let fruit of ctrl.value"
+             [class.mat-error]="(ctrl.getError('pattern')?.includes(fruit))"
+             [removable]="removable"
+             selected
+             (removed)="remove(fruit)">
       {{fruit}}
       <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
@@ -13,7 +16,20 @@
            (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
   <mat-hint>The contacts you add here will receive the report. You can copy/paste contacts from your email app (Outlook etc)</mat-hint>
+  <mat-error *ngIf="ctrl.hasError('pattern')">
+    Invalid emails in list: {{ ctrl.getError('pattern') }}
+  </mat-error>
 </mat-form-field>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<span>
+Ingvild Ødegård &lt;inod@equinor.com&gt;; Jon Rogde &lt;jonrog@equinor.com&gt; pcaa@equinor.com, rhenri@equinor.com^ronnie.laugen@olavstoppen.no;a.b.com
+
+</span>
 
 
 <!-- Copyright 2020 Google LLC. All Rights Reserved.
