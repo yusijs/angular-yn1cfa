@@ -4,12 +4,14 @@
     <mat-chip *ngFor="let fruit of ctrl.value"
              [class.mat-error]="(ctrl.getError('pattern')?.includes(fruit))"
              [removable]="true"
+             (dblclick)="edit(fruit, input)"
              selected
              (removed)="remove(fruit)">
       {{fruit}}
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input placeholder="Add recipients"
+           #input
            [matChipInputFor]="chipList"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
            [matChipInputAddOnBlur]="false"

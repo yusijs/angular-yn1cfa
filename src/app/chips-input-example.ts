@@ -67,6 +67,14 @@ export class ChipsInputExample {
       this.ctrl.setValue(list);
     }
   }
+
+  edit(value: string, input: HTMLInputElement) {
+    const list = [...this.ctrl.value];
+    list.splice(list.indexOf(value), 1);
+    this.ctrl.setValue(list);
+    input.value = value;
+    setTimeout(() => input.focus(), 100);
+  }
 }
 
 /**  Copyright 2020 Google LLC. All Rights Reserved.
