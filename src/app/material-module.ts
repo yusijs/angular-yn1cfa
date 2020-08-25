@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, Pipe} from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import {DragDropModule} from '@angular/cdk/drag-drop';
@@ -43,8 +43,25 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
 
+@Pipe({
+  name: 'nameFromMail'
+})
+export class NameFromMailPipe {
+  transform(mail: string, users?: any[]) {
+    users = [
+      { email: 'inod@equinor.com', name: 'Ingvild Ødegård' },
+      { email: 'pcaa@equinor.com', name: 'Per Christian Aagenæs' },
+      { email: 'ronnie.laugen@olavstoppen.no', name: 'Ronnie Laugen' },
+    ];
+    const user = users.find(u => u.email === mail)
+    return user ? user.name : null;
+  }
+}
+
 @NgModule({
+  declarations: [NameFromMailPipe],
   exports: [
+    NameFromMailPipe,
     A11yModule,
     ClipboardModule,
     CdkStepperModule,

@@ -5,12 +5,13 @@
              [class.mat-error]="(ctrl.getError('pattern')?.includes(fruit))"
              [removable]="true"
              (dblclick)="edit(fruit, input)"
-             selected
              (removed)="remove(fruit)">
-      {{fruit}}
+             <ng-container *ngIf="fruit | nameFromMail as name">{{ name }} ({{fruit}})</ng-container>
+            <ng-container *ngIf="!(fruit | nameFromMail)">{{fruit}}</ng-container>
       <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input placeholder="Add recipients"
+    style="flex: 1 0 100%"
            #input
            [matChipInputFor]="chipList"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
@@ -22,6 +23,7 @@
     Invalid emails in list: {{ ctrl.getError('pattern') }}
   </mat-error>
 </mat-form-field>
+
 
 <br>
 <br>

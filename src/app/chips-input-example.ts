@@ -7,6 +7,7 @@ const patternValidator = pattern => (ctrl: AbstractControl) => {
   const invalid = ctrl.value.filter(v => !pattern.exec(v));
   return invalid.length === 0 ? null : { pattern: invalid };
 };
+    const pattern = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/;
 
 /**
  * @title Chips with input
@@ -22,7 +23,7 @@ export class ChipsInputExample {
   readonly separatorKeysCodes: number[] = [ENTER];
   ctrl = new FormControl(
     ["inod@equinor.com", "rhenri@equinor.com"],
-    patternValidator(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/)
+    patternValidator(pattern)
   );
 
   ngOnInit() {
@@ -31,13 +32,12 @@ export class ChipsInputExample {
   }
 
   add(event: MatChipInputEvent): void {
-    const re = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g;
+    const re = new RegExp(pattern, 'g');
     const input = event.input;
     const value = event.value;
     const groups = value.match(re);
 
     // Validate?
-    // Split by ; & , & validate each line
     if (!groups) {
       return;
     }
@@ -51,7 +51,6 @@ export class ChipsInputExample {
       .flat()
       .filter(m => !(this.ctrl.value || []).includes(m));
     this.ctrl.setValue([...this.ctrl.value, ...emails]);
-    console.log(emails);
 
     // Reset the input value
     if (input) {
