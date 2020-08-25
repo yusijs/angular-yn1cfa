@@ -3,16 +3,16 @@
   <mat-chip-list [formControl]="ctrl" #chipList aria-label="Fruit selection">
     <mat-chip *ngFor="let fruit of ctrl.value"
              [class.mat-error]="(ctrl.getError('pattern')?.includes(fruit))"
-             [removable]="removable"
+             [removable]="true"
              selected
              (removed)="remove(fruit)">
       {{fruit}}
-      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      <mat-icon matChipRemove>cancel</mat-icon>
     </mat-chip>
     <input placeholder="Add recipients"
            [matChipInputFor]="chipList"
            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-           [matChipInputAddOnBlur]="addOnBlur"
+           [matChipInputAddOnBlur]="false"
            (matChipInputTokenEnd)="add($event)">
   </mat-chip-list>
   <mat-hint>The contacts you add here will receive the report. You can copy/paste contacts from your email app (Outlook etc)</mat-hint>
